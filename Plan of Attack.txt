@@ -1,0 +1,4 @@
+1. Browse files on GUI (able to specify number of words to search for)
+2. Take path of necessary file from GUI and extract document
+3. Search google for set of specified number of words from document
+4. Provide top 10 internet results that correspond 
