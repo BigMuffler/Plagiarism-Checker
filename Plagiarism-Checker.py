@@ -10,31 +10,36 @@ from googlesearch import search
 #Create GUI for Interface
 root = Tk()
 root.title('Plagiarsm Checker')
+#root.geometry('100x100')
 
 frame = Frame(root)
 frame.pack()
 label1 = Label(master=frame,text="Plagiarism Checker")
-label1.pack()
+l = Label(root, bg='white', width = 100, height = 5, text='Plagiarism Checker')
+l.pack(anchor = W)
+
+mylist = []
 
 def Browse():
     filename = filedialog.askopenfilename(initialdir = "/C",title = "Browse Files" , filetypes = (("txt files", "*.txt"),("all files","*.*")))
-    #my_label = Label(root, text=filename)
-    #my_label.pack()
-    Check(filename)
+    Tokenize(filename)
 
-def Check(path): #function for checking functionality 
-    print (path)
+#Tokenize File for Search
+def Tokenize(path): 
     #tokenize and parsing a file
+    global tokens
     file_content = open(path,encoding = "utf8").read()
     tokens = nltk.word_tokenize(file_content)
-    #print (tokens)
+    
+def ShowChoice():
+    print(v.get())
 
-    Selected = 10
+def GetResults():
+    Number_of_Characters = v.get()
+    Selected = Number_of_Characters
     print (tokens[0:Selected])
-
     query = TreebankWordDetokenizer().detokenize(tokens[0:Selected])
-
-    my_results_list = []
+    global mylist
     for i in search(query,        # The query you want to run
                     tld = 'com',  # The top level domain
                     lang = 'en',  # The language
@@ -43,12 +48,47 @@ def Check(path): #function for checking functionality
                     stop = 10,    # Number of links to retrieve
                     pause = 2.0,  # Lapse between HTTP requests
                     ):
-        my_results_list.append(i)
-        print(i)
+        mylist.append(i)
+        Label(root,
+         text=i,
+         justify = LEFT,
+         padx = 10).pack()
+          
+#Button to browse files
+Label(root, 
+         text="Browse for .txt file:",
+         justify = LEFT,
+         ).pack(anchor = W)
 
+btn = Button(root, text = "Browse Files",  command = Browse)
+btn.pack(anchor = W) 
 
-btn = Button(root, text = "Browse Files", command = Browse)
-btn.pack()
+#Buttons to select length of document to search
+global v
+v = IntVar()
+v.set(1) 
+Select_Number_of_Characters = [
+    ("10", 10),
+    ("50" , 50),
+    ("100", 100),
+    ("500", 500),
+    ("Whole Document", 1000)
+]
+Label(root, 
+         text="Choose the number of words you want to search:",
+         justify = LEFT,
+         pady = 10).pack(anchor = W)
+for val, mode in Select_Number_of_Characters:
+        Radiobutton(root, 
+                  text=val,
+                  padx = 10, 
+                  variable=v, 
+                  command=ShowChoice,
+                  value=mode).pack(anchor = W)
+
+#Button once clicked returns the search results
+btn1 = Button(root, text = "GO", command = GetResults) 
+btn1.pack( anchor = S, pady = 20)
 
 root.mainloop()
 
