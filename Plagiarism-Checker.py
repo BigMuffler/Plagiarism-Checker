@@ -3,19 +3,17 @@ from tkinter import filedialog
 import nltk
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 from googlesearch import search
+import webbrowser
 
 #Will work only for text files, so files uploaded must be .txt exstension
-#Specify to check Essay or Code 
-#EorC = input("Would you like to check a code snippet or essay for plagiarism?")
 #Create GUI for Interface
 root = Tk()
 root.title('Plagiarsm Checker')
-#root.geometry('100x100')
 
 frame = Frame(root)
 frame.pack()
 label1 = Label(master=frame,text="Plagiarism Checker")
-l = Label(root, bg='white', width = 100, height = 5, text='Plagiarism Checker')
+l = Label(root, bg='white', width = 100, height = 5, text='Plagiarism Checker : Returns links to online documents that are the best match')
 l.pack(anchor = W)
 
 mylist = []
@@ -49,11 +47,13 @@ def GetResults():
                     pause = 2.0,  # Lapse between HTTP requests
                     ):
         mylist.append(i)
-        Label(root,
-         text=i,
-         justify = LEFT,
-         padx = 10).pack()
-          
+        label1 = Label(root,text=i,justify = LEFT,padx = 10 , fg = "blue", cursor="hand2")
+        label1.pack()
+        label1.bind("<Button-1>", callback)    
+
+def callback(event):
+    webbrowser.open_new(event.widget.cget("text"))
+
 #Button to browse files
 Label(root, 
          text="Browse for .txt file:",
